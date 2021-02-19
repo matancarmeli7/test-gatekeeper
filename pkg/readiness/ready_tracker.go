@@ -350,15 +350,14 @@ func (t *Tracker) trackConstraintTemplates(ctx context.Context) error {
 	log.V(1).Info("setting expectations for templates", "templateCount", len(templates.Items))
 
 	handled := make(map[schema.GroupVersionKind]bool, len(templates.Items))
-	for _, ct := range templates.Items {
-		ct := ct
-		log.V(1).Info("expecting template", "name", ct.GetName())
-		t.templates.Expect(&ct)
+	for index := range templates.Items {
+		log.V(1).Info("expecting template", "name", templates.Items[index].GetName())
+		t.templates.Expect(&templates.Items[index])
 
 		gvk := schema.GroupVersionKind{
 			Group:   constraintGroup,
 			Version: v1beta1.SchemeGroupVersion.Version,
-			Kind:    ct.Spec.CRD.Spec.Names.Kind,
+			Kind:    templates.Items[index].Spec.CRD.Spec.Names.Kind,
 		}
 		if _, ok := handled[gvk]; ok {
 			log.Info("duplicate constraint type", "gvk", gvk)
