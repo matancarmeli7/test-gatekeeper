@@ -261,11 +261,10 @@ func (t *Tracker) collectForObjectTracker(ctx context.Context, es Expectations, 
 	for _, o := range unsatisfied {
 		unsatisfiedmap[o] = struct{}{}
 	}
-	for _, o := range ul.Items {
-		o := o
-		k, err := objKeyFromObject(&o)
+	for index := range ul.Items {
+		k, err := objKeyFromObject(&ul.Items[index])
 		if err != nil {
-			return errors.Wrapf(err, "while getting key for %v in collectForObjectTracker", o)
+			return errors.Wrapf(err, "while getting key for %v in collectForObjectTracker", ul.Items[index])
 		}
 		// delete is a no-op if the key isn't found
 		delete(unsatisfiedmap, k)
